@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "58310472562",
+    "firebase_url": "https://segura-380a3-default-rtdb.firebaseio.com",
+    "project_id": "segura-380a3",
+    "storage_bucket": "segura-380a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58310472562:android:542259a93984acaf3123eb",
+        "android_client_info": {
+          "package_name": "com.example.segura"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58310472562-kcnbeckre7jocarcdhb3fn51mo384v0k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.segura",
+            "certificate_hash": "53dac16342c9e54e5e7fd1dc5e56a386797dfc8b"
+          }
+        },
+        {
+          "client_id": "58310472562-sta7td848hen1nk4v43qp5q1t8r2vjo0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATvi7DDM18L5pzAqrfrcXvW1-4bpRVlx8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58310472562-sta7td848hen1nk4v43qp5q1t8r2vjo0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
