@@ -1,28 +1,15 @@
 package com.example.segura;
 
-import java.util.List;
-
-public class User {
-    String email;
+public class contact {
     String name;
     String phone;
-    List<contact> contacts;
 
-    public User() {
+    public contact() {
     }
 
-    public User(String email, String name, String phone) {
-        this.email = email;
+    public contact(String name, String phone) {
         this.name = name;
         this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getName() {
