@@ -93,10 +93,6 @@ public class Home extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 HashMap<String,String> hashMap= (HashMap<String, String>) snapshot.child("0").getValue();
                 phonesms=hashMap.get("phone");
-                //contact c1= (contact) snapshot.child("0").getValue();
-                //List<contact> l= (List<contact>) snapshot.getValue();
-                //contact c=l.get(0);
-                //contact contact=snapshot.getValue();
                 Log.d("check",snapshot.getValue().toString());
                 Log.d("check",snapshot.child("0").getValue().toString());
                 //Log.d("check",c1.getPhone());
@@ -127,7 +123,7 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sendSMSMessage();
-                /*if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)!=
+                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)!=
                         PackageManager.PERMISSION_GRANTED) {
                     requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
                 } else {
@@ -142,7 +138,7 @@ public class Home extends AppCompatActivity {
                         Toast.makeText(Home.this,"Not found",Toast.LENGTH_SHORT).show();
                     }
 
-                }*/
+                }
 
             }
         });

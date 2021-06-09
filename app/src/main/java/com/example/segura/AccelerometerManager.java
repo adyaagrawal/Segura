@@ -12,32 +12,18 @@ import java.util.List;
 public class AccelerometerManager {
   
     private static Context aContext=null;
-     
-     
-    /** Accuracy configuration */
     private static float threshold  = 15.0f;
     private static int interval     = 200;
-  
     private static Sensor sensor;
     private static SensorManager sensorManager;
-    // you could use an OrientationListener array instead
-    // if you plans to use more than one listener
     private static AccelerometerListener listener;
-  
-    /** indicates whether or not Accelerometer Sensor is supported */
     private static Boolean supported;
-    /** indicates whether or not Accelerometer Sensor is running */
     private static boolean running = false;
-  
-    /**
-     * Returns true if the manager is listening to orientation changes
-     */
+
     public static boolean isListening() {
         return running;
     }
-    /**
-     * Unregisters listeners
-     */
+
     public static void stopListening() {
         running = false;
         try {
@@ -46,27 +32,18 @@ public class AccelerometerManager {
             }
         } catch (Exception e) {}
     }
-  
-    /**
-     * Returns true if at least one Accelerometer sensor is available
-     */
+
     public static boolean isSupported(Context context) {
         aContext = context;
         if (supported == null) {
             if (aContext != null) {
-                 
-                 
                 sensorManager = (SensorManager) aContext.
                         getSystemService(Context.SENSOR_SERVICE);
-                 
                 // Get all sensors in device
                 List<Sensor> sensors = sensorManager.getSensorList(
                         Sensor.TYPE_ACCELEROMETER);
                  
                 supported = new Boolean(sensors.size() > 0);
-                 
-                 
-                 
             } else {
                 supported = Boolean.FALSE;
             }
