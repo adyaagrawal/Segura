@@ -15,11 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Segura">
-        <activity android:name=".locScreen"></activity>
+        <activity android:name=".locActivity"></activity>
+        <activity android:name=".locScreen" />
         <activity android:name=".AddContact" />
         <activity android:name=".Profile" />
         <activity android:name=".Tips" />
-        <activity android:name=".Location" />
         <activity android:name=".Home" />
         <activity android:name=".Signup" />
         <activity android:name=".Signin" />

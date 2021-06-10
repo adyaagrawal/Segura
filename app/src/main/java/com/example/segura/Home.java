@@ -73,7 +73,7 @@ public class Home extends AppCompatActivity {
                     case R.id.nav_home:
                         return true;
                     case R.id.nav_loc:
-                        startActivity(new Intent(getApplicationContext(), Location.class));
+                        startActivity(new Intent(getApplicationContext(), locActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.nav_tips:
