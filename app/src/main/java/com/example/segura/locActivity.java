@@ -76,13 +76,11 @@ public class locActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onResume();
         mapView.onResume();
     }
-
     @Override
     protected void onStart() {
         super.onStart();
         mapView.onStart();
     }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -107,7 +105,7 @@ public class locActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
         gmap.setMinZoomPreference(12);
-        LatLng ny = new LatLng(40.7143528, -74.0059731);
+        LatLng ny = new LatLng(40.7143528,-74.0059731);
         gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
 }
