@@ -17,6 +17,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class locActivity extends AppCompatActivity implements OnMapReadyCallback {
     private MapView mapView;
     private GoogleMap gmap;
+    Double lat;
+    Double log;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "MapViewBundleKey";
 
@@ -31,7 +33,10 @@ public class locActivity extends AppCompatActivity implements OnMapReadyCallback
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAP_VIEW_BUNDLE_KEY);
         }
-
+        if (getIntent() != null) {
+            lat = getIntent().getDoubleExtra("latitude",40.7143528);
+            log = getIntent().getDoubleExtra("longitude",-74.0059731);
+        }
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(mapViewBundle);
         mapView.getMapAsync(this);
@@ -105,7 +110,7 @@ public class locActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         gmap = googleMap;
         gmap.setMinZoomPreference(12);
-        LatLng ny = new LatLng(40.7143528,-74.0059731);
+        LatLng ny = new LatLng(lat,log);
         gmap.moveCamera(CameraUpdateFactory.newLatLng(ny));
     }
 }

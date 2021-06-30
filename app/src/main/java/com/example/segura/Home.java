@@ -1,6 +1,7 @@
 package com.example.segura;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +49,7 @@ public class Home extends AppCompatActivity {
     String uid;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
+    Double lat,log;
     FirebaseRecyclerAdapter<contact,ContactViewHolder> Adapter;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
     String phonesms,message,city;
@@ -65,6 +67,23 @@ public class Home extends AppCompatActivity {
         uid=user.getUid();
         mdatabase=FirebaseDatabase.getInstance();
         dat=mdatabase.getReference("User");
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)!=
+                PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+        } else {
+            LocationManager locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            @SuppressLint("MissingPermission") Location location=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            try{
+                lat=location.getLatitude();
+                log=location.getLongitude();
+                city=hereLocation(lat,log);
+                Log.d("check",city);
+
+            }catch(Exception e){
+                e.printStackTrace();
+                Toast.makeText(Home.this,"Not found",Toast.LENGTH_SHORT).show();
+            }
+        }
 
         bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -73,7 +92,10 @@ public class Home extends AppCompatActivity {
                     case R.id.nav_home:
                         return true;
                     case R.id.nav_loc:
-                        startActivity(new Intent(getApplicationContext(), locActivity.class));
+                        Intent intent=new Intent(getApplicationContext(),locActivity.class);
+                        intent.putExtra("latitude",lat);
+                        intent.putExtra("longitude",log);
+                        startActivity(intent);
                         overridePendingTransition(0, 0);
                         return true;
                     case R.id.nav_tips:
@@ -122,24 +144,11 @@ public class Home extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendSMSMessage();
-                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)!=
-                        PackageManager.PERMISSION_GRANTED) {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
-                } else {
-                    LocationManager locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
-                    Location location=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    try{
-                        city=hereLocation(location.getLatitude(),location.getLongitude());
-                        Log.d("check",city);
-
-                    }catch(Exception e){
-                        e.printStackTrace();
-                        Toast.makeText(Home.this,"Not found",Toast.LENGTH_SHORT).show();
-                    }
-
+                Log.d("check","send fn");
+                if(city!=null){
+                    Log.d("check","city not null");
+                    sendSMSMessagePermission();
                 }
-
             }
         });
     }
@@ -154,10 +163,7 @@ public class Home extends AppCompatActivity {
             if(adresses.size()>0){
                 for(Address adr:adresses){
                     s1=adr.getAddressLine(0);
-                    s2=adr.getAddressLine(1);
-                    if(adr.getLocality()!=null && adr.getLocality().length()>0){
-                        cityname=adr.getLocality();
-                    }break;}}}
+                    }}}
         catch(IOException e){
             e.printStackTrace();
         }
@@ -178,7 +184,8 @@ public class Home extends AppCompatActivity {
         recyclerView.setAdapter(Adapter);
     }
 
-    protected void sendSMSMessage() {
+    protected void sendSMSMessagePermission() {
+        Log.d("check","inside send sms permission");
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.SEND_SMS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -189,7 +196,17 @@ public class Home extends AppCompatActivity {
                         new String[]{Manifest.permission.SEND_SMS},
                         MY_PERMISSIONS_REQUEST_SEND_SMS);
             }
+        } else {
+            sendSMSMessage();
         }
+    }
+
+    protected void sendSMSMessage() {
+        Log.d("check","inside send sms");
+        SmsManager smsManager = SmsManager.getDefault();
+        message="Help! I am in danger! Here is my location:"+ city;
+        smsManager.sendTextMessage(phonesms, null, message, null, null);
+        Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -198,13 +215,10 @@ public class Home extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    message="Help! I am in danger! Here is my location: Park royale society, Rahatani, Pune";
-                    smsManager.sendTextMessage(phonesms, null, message, null, null);
-                    Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+                    sendSMSMessage();
+                    return;
                 } else {
-                    Toast.makeText(getApplicationContext(),
-                            "SMS failed, please try again.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "SMS failed, please try again.", Toast.LENGTH_LONG).show();
                     return;
                 }
             }
