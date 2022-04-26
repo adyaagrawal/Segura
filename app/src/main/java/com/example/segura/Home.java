@@ -15,16 +15,17 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -53,6 +53,8 @@ public class Home extends AppCompatActivity {
     FirebaseRecyclerAdapter<contact,ContactViewHolder> Adapter;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
     String phonesms,message,city;
+    ContactViewHolder viewholder;
+    TextView namet,phonet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class Home extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.nav_home);
         button=findViewById(R.id.floatingActionButton2);
         send=findViewById(R.id.floatingActionButton);
+        namet=findViewById(R.id.cname);
+        phonet=findViewById(R.id.cphone);
         firebaseAuth=FirebaseAuth.getInstance();
         user=firebaseAuth.getCurrentUser();
         uid=user.getUid();
@@ -113,12 +117,12 @@ public class Home extends AppCompatActivity {
         mdatabase.getReference().child("User").child(uid).child("contact").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HashMap<String,String> hashMap= (HashMap<String, String>) snapshot.child("0").getValue();
-                phonesms=hashMap.get("phone");
-                Log.d("check",snapshot.getValue().toString());
-                Log.d("check",snapshot.child("0").getValue().toString());
+                //HashMap<String,String> hashMap= (HashMap<String, String>) snapshot.child("0").getValue();
+                //phonesms=hashMap.get("phone");
+                //Log.d("check",snapshot.getValue().toString());
+                //Log.d("check",snapshot.child("0").getValue().toString());
                 //Log.d("check",c1.getPhone());
-                Log.d("check",hashMap.get("phone"));
+                //Log.d("check",hashMap.get("phone"));
                 //Log.d("check",c.getPhone());
             }
 
@@ -135,10 +139,10 @@ public class Home extends AppCompatActivity {
             }
         });
 
-        recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
-        recyclerView.setHasFixedSize(true);
-        layoutManager=new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView=(RecyclerView)findViewById(R.id.recyclerView);
+//        recyclerView.setHasFixedSize(true);
+//        layoutManager=new LinearLayoutManager(this);
+//        recyclerView.setLayoutManager(layoutManager);
         loadContacts();
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -170,20 +174,30 @@ public class Home extends AppCompatActivity {
         return s1;
     }
     private void loadContacts() {
-        Adapter=new FirebaseRecyclerAdapter<contact, ContactViewHolder>(contact.class,
-                R.layout.contactcard,
-                ContactViewHolder.class,
-                dat.child(uid).child("contact").orderByKey()
-        ) {
+        mdatabase.getReference().child("User").child(uid).child("contact").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            protected void populateViewHolder(ContactViewHolder viewholder, contact c, int i) {
-                viewholder.name.setText(c.getName());
-                viewholder.phone.setText(c.getPhone());
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.getValue()!=null){
+                    HashMap<String,String> contact=(HashMap)snapshot.getValue();
+                    String name=contact.get("name");
+                    String phone=contact.get("phone");
+                    //contact contact=(contact)snapshot.getValue();
+                    Log.d("check",snapshot.toString());
+                    Log.d("check",snapshot.getValue().toString());
+                    Log.d("check",name);
+                    Log.d("check",phone);
+                    namet.setText(name);
+                    phonet.setText(phone);
+                    phonesms=phone;
+                }
             }
-        };
-        recyclerView.setAdapter(Adapter);
-    }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     protected void sendSMSMessagePermission() {
         Log.d("check","inside send sms permission");
         if (ContextCompat.checkSelfPermission(this,

@@ -1,12 +1,13 @@
 package com.example.segura;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class User {
     String email;
     String name;
     String phone;
-    List<contact> contacts;
+    HashMap<String,String> contact;
 
     public User() {
     }
@@ -39,5 +40,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public HashMap<String, String> getContacts() {
+        return contact;
+    }
+
+    public void setContacts(HashMap<String, String> contacts) {
+        this.contact = contacts;
     }
 }

@@ -21,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class AddContact extends AppCompatActivity {
@@ -33,6 +34,7 @@ public class AddContact extends AppCompatActivity {
     FirebaseDatabase mdatabase;
     DatabaseReference det;
     int sizen;
+    String query;
 
 
     @Override
@@ -68,11 +70,9 @@ public class AddContact extends AppCompatActivity {
     private void database() {
         mdatabase=FirebaseDatabase.getInstance();
         det=mdatabase.getReference();
-        contact contact=new contact(names,phones);
-        List<contact> list= new ArrayList<contact>();
-        list.add(contact);
+        contact contact = new contact(names,phones);
 
-        mdatabase.getReference().child("User").child(uid).child("contact").setValue(list).addOnCompleteListener(new OnCompleteListener<Void>() {
+        mdatabase.getReference().child("User").child(uid).child("contact").setValue(contact).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Toast.makeText(AddContact.this,"Contact added",Toast.LENGTH_SHORT).show();
